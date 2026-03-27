@@ -1,10 +1,14 @@
 from repository.user_repository import UserRepository
 from fastapi import HTTPException
 
+from utils.hash import hash_password
+
 class UserService:
     @staticmethod
     async def create_user(user):
         user_dict = user.dict()
+        user_dict["password"] = hash_password(user_dict["password"])
+        # user_dict.pop("confirm_password", None)
         user_id = await UserRepository.create_user(user_dict)
         return user_id
     @staticmethod

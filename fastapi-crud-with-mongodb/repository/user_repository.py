@@ -21,3 +21,15 @@ class UserRepository:
         for user in users:
             user["_id"] = str(user["_id"])
         return users
+    @staticmethod
+    async def get_user_by_email(email: str):
+        collection = get_user_collection()
+        return await collection.find_one({"email": email})
+
+    @staticmethod
+    async def save_refresh_token(user_id: str, refresh_token: str):
+        collection = get_user_collection()
+        await collection.update_one(
+            {"_id": ObjectId(user_id)},
+            {"$set": {"refresh_token": refresh_token}}
+        )
